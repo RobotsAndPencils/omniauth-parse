@@ -14,14 +14,16 @@ module OmniAuth
       def initialize(app, options = {})
         @application_id = options[:application_id] or raise "application_id is required for initialization"
         @rest_api_key = options[:rest_api_key] or raise "rest_api_key is required for initialization"
+        @page_title = options[:title]
+        @page_submit_button = options[:submit_button]
         super
       end
 
       def request_phase
-        form = OmniAuth::Form.new(:title => "Parse.com Info", :url => callback_path)
+        form = OmniAuth::Form.new(:title => (@page_title || "Parse.com Info"), :url => callback_path)
           form.text_field :username, :username
           form.password_field :password, :password
-        form.button "Sign In"
+        form.button (@page_submit_button || "Sign In")
         form.to_response
       end
 
